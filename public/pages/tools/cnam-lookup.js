@@ -205,21 +205,36 @@
     pag.innerHTML = components.renderPagination(page, totalPages, 'window.__cnamPage');
   }
 
+  function lineTypeBadge(type) {
+    const colors = { mobile: '#3fb950', landline: '#58a6ff', fixedVoip: '#d2a8ff', nonFixedVoip: '#f0883e', tollFree: '#8b949e' };
+    const color = colors[type] || '#8b949e';
+    return `<span class="line-badge" style="--badge-color:${color}">${esc(type || 'Unknown')}</span>`;
+  }
+
   function renderResultCard(d) {
     if (d.error_message) {
-      return `<div class="result-card"><h3>${esc(d.phone_number)}</h3><p class="result-value error">${esc(d.error_message)}</p></div>`;
+      return `<div class="result-card"><div class="rc-phone">${esc(d.phone_number)}</div><p class="result-value error">${esc(d.error_message)}</p></div>`;
     }
     return `
       <div class="result-card">
-        <h3>${esc(d.phone_number)}</h3>
-        <div class="result-grid">
-          <div class="result-item"><div class="result-label">Caller Name</div><div class="result-value">${esc(d.caller_name || 'N/A')}</div></div>
-          <div class="result-item"><div class="result-label">Caller Type</div><div class="result-value">${esc(d.caller_type || 'N/A')}</div></div>
-          <div class="result-item"><div class="result-label">Country</div><div class="result-value">${esc(d.country_code || 'N/A')}</div></div>
-          <div class="result-item"><div class="result-label">Carrier</div><div class="result-value">${esc(d.carrier_name || 'N/A')}</div></div>
-          <div class="result-item"><div class="result-label">Line Type</div><div class="result-value">${esc(d.line_type || 'N/A')}</div></div>
-          <div class="result-item"><div class="result-label">MCC</div><div class="result-value">${esc(d.mobile_country_code || 'N/A')}</div></div>
-          <div class="result-item"><div class="result-label">MNC</div><div class="result-value">${esc(d.mobile_network_code || 'N/A')}</div></div>
+        <div class="rc-header">
+          <div>
+            <div class="rc-phone">${esc(d.phone_number)}</div>
+            <div class="rc-country">${esc(d.country_code || '')}</div>
+          </div>
+          ${lineTypeBadge(d.line_type)}
+        </div>
+        <div class="rc-sections">
+          <div class="rc-section">
+            <div class="rc-section-title">Caller Info</div>
+            <div class="rc-row"><span class="rc-label">Name</span><span class="rc-val">${esc(d.caller_name || 'N/A')}</span></div>
+            <div class="rc-row"><span class="rc-label">Type</span><span class="rc-val">${esc(d.caller_type || 'N/A')}</span></div>
+          </div>
+          <div class="rc-section">
+            <div class="rc-section-title">Carrier</div>
+            <div class="rc-row"><span class="rc-label">Name</span><span class="rc-val">${esc(d.carrier_name || 'N/A')}</span></div>
+            <div class="rc-row"><span class="rc-label">MCC / MNC</span><span class="rc-val">${esc(d.mobile_country_code || '-')} / ${esc(d.mobile_network_code || '-')}</span></div>
+          </div>
         </div>
       </div>`;
   }
