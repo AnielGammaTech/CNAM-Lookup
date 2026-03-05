@@ -78,6 +78,14 @@ async function initialize() {
     );
     CREATE INDEX IF NOT EXISTS idx_lookups_phone ON lookups(phone_number);
     CREATE INDEX IF NOT EXISTS idx_lookups_date ON lookups(looked_up_at DESC);
+  `);
+
+  // Migration: add user_id column if table already existed without it
+  await db.query(`
+    DO $$ BEGIN
+      ALTER TABLE lookups ADD COLUMN user_id INTEGER REFERENCES users(id);
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$;
     CREATE INDEX IF NOT EXISTS idx_lookups_user ON lookups(user_id);
   `);
 
