@@ -8,8 +8,9 @@ router.get('/', async (req, res) => {
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 50));
     const search = (req.query.search || '').trim().slice(0, 100);
+    const isAdmin = req.user.role === 'admin';
 
-    const result = await getHistory({ page, limit, search });
+    const result = await getHistory({ page, limit, search, userId: req.user.id, isAdmin });
     res.json({ success: true, ...result });
   } catch (error) {
     console.error('History fetch error:', error.message);
@@ -19,7 +20,8 @@ router.get('/', async (req, res) => {
 
 router.delete('/', async (req, res) => {
   try {
-    await clearHistory();
+    const isAdmin = req.user.role === 'admin';
+    await clearHistory(req.user.id, isAdmin);
     res.json({ success: true, message: 'History cleared' });
   } catch (error) {
     console.error('History clear error:', error.message);

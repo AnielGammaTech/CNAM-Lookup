@@ -11,7 +11,7 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 *
 router.post('/single', validatePhoneNumber, async (req, res) => {
   try {
     const result = await lookupNumber(req.normalizedPhone);
-    const saved = await insertLookup(result);
+    const saved = await insertLookup(result, req.user.id);
     res.json({ success: true, data: saved });
   } catch (error) {
     console.error('Single lookup error:', error.message);
@@ -30,14 +30,11 @@ router.post('/bulk', upload.single('file'), async (req, res) => {
     if (rawNumbers.length === 0) {
       return res.status(400).json({ success: false, error: 'No phone numbers found in CSV' });
     }
-
     if (rawNumbers.length > 500) {
       return res.status(400).json({ success: false, error: 'Maximum 500 numbers per upload' });
     }
 
-    const numbers = rawNumbers
-      .map((n) => normalizePhone(n))
-      .filter(Boolean);
+    const numbers = rawNumbers.map((n) => normalizePhone(n)).filter(Boolean);
 
     if (numbers.length === 0) {
       return res.status(400).json({ success: false, error: 'No valid phone numbers found in CSV' });
@@ -46,7 +43,7 @@ router.post('/bulk', upload.single('file'), async (req, res) => {
     const results = [];
     for (const phone of numbers) {
       const result = await lookupNumber(phone);
-      const saved = await insertLookup(result);
+      const saved = await insertLookup(result, req.user.id);
       results.push(saved);
     }
 
