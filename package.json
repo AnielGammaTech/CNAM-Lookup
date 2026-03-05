@@ -1,0 +1,20 @@
+{
+  "name": "cnam-lookup",
+  "version": "1.0.0",
+  "description": "CNAM Lookup tool using Twilio API - check carrier and caller name information",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.0",
+    "twilio": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

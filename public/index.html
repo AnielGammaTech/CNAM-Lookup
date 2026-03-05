@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNAM Lookup</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CNAM Lookup</h1>
+      <p class="subtitle">Phone number carrier &amp; caller name lookup via Twilio</p>
+      <nav>
+        <button class="tab active" data-tab="single">Single Lookup</button>
+        <button class="tab" data-tab="bulk">Bulk CSV</button>
+        <button class="tab" data-tab="history">History</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Single Lookup -->
+      <section id="single" class="panel active">
+        <form id="single-form">
+          <div class="input-row">
+            <input type="tel" id="phone-input" placeholder="Enter phone number (e.g. 2125551234)" required>
+            <button type="submit" id="lookup-btn">Lookup</button>
+          </div>
+        </form>
+        <div id="single-result" class="result-area hidden"></div>
+      </section>
+
+      <!-- Bulk CSV -->
+      <section id="bulk" class="panel hidden">
+        <div class="upload-area" id="drop-zone">
+          <p>Drag &amp; drop a CSV file here, or click to select</p>
+          <p class="hint">One phone number per row, first column. Max 500 numbers.</p>
+          <input type="file" id="csv-input" accept=".csv" hidden>
+        </div>
+        <div id="bulk-progress" class="hidden">
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <p id="progress-text">Processing...</p>
+        </div>
+        <div id="bulk-result" class="result-area hidden"></div>
+      </section>
+
+      <!-- History -->
+      <section id="history" class="panel hidden">
+        <div class="history-controls">
+          <input type="text" id="search-input" placeholder="Search by number, name, or carrier...">
+          <button id="clear-history-btn" class="btn-danger">Clear All</button>
+        </div>
+        <div id="history-table-wrap">
+          <table id="history-table">
+            <thead>
+              <tr>
+                <th>Phone</th>
+                <th>Caller Name</th>
+                <th>Type</th>
+                <th>Carrier</th>
+                <th>Line Type</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
